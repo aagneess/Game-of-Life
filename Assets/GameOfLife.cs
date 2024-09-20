@@ -6,16 +6,22 @@ using TMPro;
 
 public class GameOfLife : MonoBehaviour
 {
-    public GameObject cellPrefab;
     private Cell[,] cells;
     private float cellSize = 0.1f;
     private int numberOfColums, numberOfRows;
     private int spawnChancePercentage = 20;
     private int targetFrameRate = 10;
+    private bool showUI = true; 
     
+    public GameObject cellPrefab;
     public Slider percentageSlider;
+    public TMP_Text spawnChanceText;
     public Slider frameRateSlider;
+    public TMP_Text frameRateText;
     public TMP_Dropdown patternDropdown;
+    public GameObject uiPanel;
+    public Button toggleButton;
+    public TMP_Text toggleButtonText;
 
     void Start()
     {
@@ -81,19 +87,29 @@ public class GameOfLife : MonoBehaviour
 
     private void InitializeUI()
     {
-        if (percentageSlider != null)
+        if (percentageSlider)
         {
             percentageSlider.value = spawnChancePercentage;
             percentageSlider.onValueChanged.AddListener(OnSpawnChanceChanged);
         }
 
-        if (frameRateSlider != null)
+        if (spawnChanceText)
+        {
+            spawnChanceText.text = spawnChancePercentage + "%";
+        }
+
+        if (frameRateSlider)
         {
             frameRateSlider.value = targetFrameRate;
             frameRateSlider.onValueChanged.AddListener(OnFrameRateChanged);
         }
 
-        if (patternDropdown != null)
+        if (frameRateText)
+        {
+            frameRateText.text = targetFrameRate + "fps";
+        }
+
+        if (patternDropdown)
         {
             patternDropdown.options.Clear();
             patternDropdown.options.Add(new TMP_Dropdown.OptionData("Randomize"));
@@ -102,7 +118,14 @@ public class GameOfLife : MonoBehaviour
             patternDropdown.options.Add(new TMP_Dropdown.OptionData("Gosper Glider Gun"));
             patternDropdown.onValueChanged.AddListener(OnPatternChanged);
         }
+
+        if (uiPanel)
+        {
+            toggleButton.onClick.AddListener(toggleUI);
+        }
     }
+
+
 
     private void UpdateAllCells()
     {
@@ -158,8 +181,8 @@ public class GameOfLife : MonoBehaviour
     private void OnSpawnChanceChanged(float value)
     {
         spawnChancePercentage = (int)value;
-        //Debug.Log(spawnChancePercentage);
-        // Add this to canvas
+        spawnChanceText.text = spawnChancePercentage + "%";
+        
         UpdateAllCells();
     }
 
@@ -167,8 +190,7 @@ public class GameOfLife : MonoBehaviour
     {
         targetFrameRate = (int)value;
         Application.targetFrameRate = targetFrameRate;
-        //Debug.Log(targetFrameRate);
-        //Add this to canvas
+        frameRateText.text = targetFrameRate + "fps";
     }
 
     private void OnPatternChanged(int patternIndex)
@@ -223,5 +245,12 @@ public class GameOfLife : MonoBehaviour
                 }
             }
         }
+    }
+    
+    public void toggleUI()
+    {
+        showUI = !showUI;
+        uiPanel.SetActive(showUI);
+        toggleButtonText.text = showUI ? "Hide UI" : "Show UI";
     }
 }

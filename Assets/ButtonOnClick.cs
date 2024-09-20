@@ -6,6 +6,7 @@ public class ButtonOnCLick : MonoBehaviour
     public Button button;
     public Sprite defaultSprite;
     public Sprite clickedSprite;
+
     private Image buttonImage;
     private RectTransform buttonRectTransform;
     private Vector2 originalPosition;
@@ -22,13 +23,14 @@ public class ButtonOnCLick : MonoBehaviour
     void ChangeSpriteOnClick()
     {
         buttonRectTransform.anchoredPosition = originalPosition + new Vector2(0, -12);
-        if (buttonImage.sprite == defaultSprite)
+        if (buttonImage.sprite == defaultSprite || Input.GetMouseButtonDown(0))
         {
             buttonImage.sprite = clickedSprite;
         }
         else
         {
             buttonImage.sprite = defaultSprite;
+            buttonRectTransform.anchoredPosition = originalPosition + new Vector2(0, 0);
         }
     }
 }
